@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using apbd_cw6.Handlers;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace apbd_cw6
 {
@@ -28,10 +31,25 @@ namespace apbd_cw6
         {
 
             //http basic
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = "s18793",
+                        ValidAudience = "Students",
+                        IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
+                    };
 
-            services.AddAuthentication("AuthenticationBasic")
-                .AddScheme<AuthenticationSchemeOptions, BasicAuthHandler>
-                ("AuthenticationBasic", null); 
+                }
+                );
+
+           // services.AddAuthentication("AuthenticationBasic")
+            //    .AddScheme<AuthenticationSchemeOptions, BasicAuthHandler>
+            //    ("AuthenticationBasic", null); 
 
 
             services.AddControllers()
