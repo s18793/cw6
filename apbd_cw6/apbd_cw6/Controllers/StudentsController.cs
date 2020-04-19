@@ -50,10 +50,33 @@ namespace apbd_cw6.Controllers
             return Ok(list);
 
         }
+      
+        [Authorize(Roles = "employee")]
+        [HttpPost("enrollment")]
+       
+        public IActionResult EnrollStudent()
+        {
+           
+            return Ok();
+        }
 
-        [HttpPost]
+        [Authorize(Roles = "employee")]
+        [HttpPost("promote")]
+        public IActionResult PromoteStudents()
+        {
+           
+            return Ok();
+        }
+
+
+        [HttpPost("login")]
         public IActionResult Login(LoginRequestDto requestDto)
         {
+
+          
+            var pass =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Pasword"]));
+            
+
 
             var claims = new[]
             {
