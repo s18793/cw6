@@ -11,5 +11,6 @@ namespace apbd_cw6.Models
         public int IdStudent { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Password { get; set; }
     }
 }
