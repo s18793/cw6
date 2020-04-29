@@ -27,7 +27,7 @@ namespace apbd_cw6.Handlers
         }
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (Request.Headers.ContainsKey("Authorization"))
+            if (!Request.Headers.ContainsKey("Authorization"))
                 return AuthenticateResult.Fail("Missing authorization");
 
             var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
@@ -41,14 +41,15 @@ namespace apbd_cw6.Handlers
             {
                 new Claim(ClaimTypes.NameIdentifier,"1"),
                 new Claim(ClaimTypes.Name, "pawel"),
-                new Claim(ClaimTypes.Role, "student")
+                new Claim(ClaimTypes.Role, "student"),
+                new Claim(ClaimTypes.Role, "admin")
             };
 
             var idnenty = new ClaimsIdentity(claims, Scheme.Name);
             var prinicpal = new ClaimsPrincipal(idnenty);
             var ticket = new AuthenticationTicket(prinicpal, Scheme.Name);
 
-            return AuthenticateResult.Success(null);
+            return AuthenticateResult.Success(ticket);
         }
     }
 
