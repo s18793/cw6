@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using apbd_cw6.Handlers;
+using apbd_cw6.Models;
+using apbd_cw6.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,33 +32,13 @@ namespace apbd_cw6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //http basic
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = "s18793",
-                        ValidAudience = "Students",
-                        IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
-                    };
-
-                }
-                );
-
-           // services.AddAuthentication("AuthenticationBasic")
-            //    .AddScheme<AuthenticationSchemeOptions, BasicAuthHandler>
-            //    ("AuthenticationBasic", null); 
-
-
-            services.AddControllers()
-                    .AddXmlSerializerFormatters();
+            services.AddScoped<EfStudentDbService, EfStudentDbService>();
+            services.AddDbContext<s18793Context>(options =>
+            {
+                options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s18793;Integrated Security=True");
+            });
+            services.AddControllers();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

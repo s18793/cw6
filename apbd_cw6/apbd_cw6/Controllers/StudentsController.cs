@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using apbd_cw6.DTOs;
-using apbd_cw6.Models;
+using apbd_cw6.Models2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -104,7 +104,7 @@ namespace apbd_cw6.Controllers
                 (
                      issuer: "s18793",
                      audience: "Students",
-                      claims: claims,
+                    //  claims: ,
                        expires: DateTime.Now.AddMinutes(10),
                        signingCredentials: creds
 
@@ -147,5 +147,6 @@ namespace apbd_cw6.Controllers
 
             }
 
+        }
     }
 }
