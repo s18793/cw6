@@ -52,10 +52,22 @@ namespace apbd_cw6.Controllers
             var res = _service.deleteStudent(IndexNumber);
             return Ok(res);
         }
+        [HttpPost]
+        [Route("api/students/promo")]
+        public IActionResult promoteStudents(PromoteStudReq request)
+        {
+            List<Enrollment> lista = _service.promoteStudents(request);
+            return Ok(lista);
+        }
 
-        //public promote
-
-        ///public enroll
+        [HttpPost]
+        [Route("api/students/enroll")]
+        public IActionResult EnrollStudent(EnrollStudentReq req)
+        {
+            string enroll = _service.EnrollStudent(req);
+            return Ok(enroll);
+        }
+        
 
     }
 }

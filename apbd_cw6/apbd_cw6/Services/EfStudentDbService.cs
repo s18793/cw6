@@ -1,5 +1,6 @@
 ﻿using apbd_cw6.DTOs;
 using apbd_cw6.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,12 +77,40 @@ namespace apbd_cw6.Services
         public List<Enrollment> promoteStudents(PromoteStudReq request)
         {
 
-            throw new NotImplementedException();
+            //todo dodac z poprzedniego repo do tego 
+            //procedura z cwiczen poprzednich zwizanychh z promote
+            _context.Database.ExecuteSqlRaw("EXEC PromoteStudents @studies @Semester ", request.Name, request.Semester);
+            return null;
         }
 
         public string EnrollStudent(EnrollStudentReq req)
         {
-            throw new NotImplementedException();
+
+            var student = _context.Student.Where(s => s.IndexNumber.Equals(req.IndexNumber)).ToList();
+
+            if (student.Count != 0) return "Istnieje juz taki indeks";
+            var studi = _context.Studies.Where(st => st.Name.Equals(req.Studies)).ToList();
+            var enrollment = _context.Enrollment.Where(e => e.IdStudy.Equals(studi.First().IdStudy)&& e.Semester == 1).ToList();
+
+            if (enrollment.Count() == 0)
+            {
+                Enrollment enrol = new Enrollment
+                {
+                    IdEnrollment = enrollment.First().IdEnrollment,
+                    IdStudy = studi.First().IdStudy,
+                    Semester = 1,
+                    StartDate = DateTime.Now
+                };
+
+                _context.Enrollment.Add(enrol);
+                _context.SaveChanges();
+
+
+
+            }
+            return null;
+
+                
         }
     }
 }
