@@ -32,11 +32,11 @@ namespace apbd_cw6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<EfStudentDbService, EfStudentDbService>();
-            services.AddDbContext<s18793Context>(options =>
-            {
-                options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s18793;Integrated Security=True");
-            });
+
+            services.AddDbContext<s18793Context>();//(options =>
+           // {
+             ///   options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s18793;Integrated Security=True");
+           // });
             services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

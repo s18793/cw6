@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using apbd_cw6.DTOs;
-using apbd_cw6.Models2;
+using apbd_cw6.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,35 +20,28 @@ namespace apbd_cw6.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
+
         public IConfiguration Configuration { get; set; }
-        public StudentsController(IConfiguration configuration)
+        public s18793Context _con;
+        public StudentsController(IConfiguration configuration, s18793Context contex)
         {
             Configuration = configuration;
+            _con = contex;
+
         }
 
         [HttpGet]
         [Authorize]
+
+
         public IActionResult GetStudents()
         {
 
 
-            var list = new List<Student>();
+            var data = new s18793Context();
 
-            list.Add(new Student
-            {
-                IdStudent = 1,
-                FirstName = "Jan",
-                LastName = "Kowalski"
-
-            });
-            list.Add(new Student
-            {
-                IdStudent = 2,
-                FirstName = "Kajetan",
-                LastName = "Masny"
-
-            });
-            return Ok(list);
+            var listaStud = data.Student.ToList();
+            return Ok(listaStud);
 
         }
 
@@ -68,6 +61,14 @@ namespace apbd_cw6.Controllers
 
             return Ok();
         }
+
+
+        public IActionResult ModifyStudents(Student student)
+        {
+            var mod = 1; 
+            return Ok();
+        }
+
 
 
         [HttpPost("login")]
