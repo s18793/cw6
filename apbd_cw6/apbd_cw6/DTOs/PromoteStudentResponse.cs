@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace apbd_cw6.DTOs
+{
+    public class PromoteStudentResponse
+    {
+        public int IdEnrollment { get; set; }
+        public string Semester { get; set; }
+        public string IdStudy { get; set; }
+        public DateTime StartDate { get; set; }
+
+
+    }
+}

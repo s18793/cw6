@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using apbd_cw6.DTOs;
 using apbd_cw6.Models;
+using apbd_cw6.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,133 +22,40 @@ namespace apbd_cw6.Controllers
     public class StudentsController : ControllerBase
     {
 
-        public IConfiguration Configuration { get; set; }
-        public s18793Context _con;
-        public StudentsController(IConfiguration configuration, s18793Context contex)
+        public IStudentDbSerives _service;
+
+        public StudentsController(IStudentDbSerives service)
         {
-            Configuration = configuration;
-            _con = contex;
-
+            _service = service;
         }
-
         [HttpGet]
-        [Authorize]
-
-
         public IActionResult GetStudents()
         {
 
-
-            var data = new s18793Context();
-
-            var listaStud = data.Student.ToList();
-            return Ok(listaStud);
+            var res = _service.getStudent();
+            return Ok(res);
 
         }
+        [Route("api/update")]
+        [HttpPost]
 
-        [Authorize(Roles = "employee")]
-        [HttpPost("enrollment")]
-
-        public IActionResult EnrollStudent()
+        public IActionResult modfiyStudent(Student _student)
         {
-
-            return Ok();
+            var res = _service.modfiyStudent(_student);
+            return Ok(res);
         }
 
-        [Authorize(Roles = "employee")]
-        [HttpPost("promote")]
-        public IActionResult PromoteStudents()
+        [HttpDelete("{IndexNumber}")]
+
+        public IActionResult deleteStudent(String IndexNumber)
         {
-
-            return Ok();
+            var res = _service.deleteStudent(IndexNumber);
+            return Ok(res);
         }
 
+        //public promote
 
-        public IActionResult ModifyStudents(Student student)
-        {
-            var mod = 1; 
-            return Ok();
-        }
+        ///public enroll
 
-
-
-        [HttpPost("login")]
-        public IActionResult Login(LoginRequestDto requestDto)
-        {
-
-            using (var con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18793;Integrated Security=True"))
-            using (var com = new SqlCommand())
-            {
-                com.Connection = con;
-                com.CommandText = "select 1 from Student where INDEXNUMBER= @indeks and PASSWORD=@pass";
-                com.Parameters.AddWithValue("indeks", requestDto.Login);
-                com.Parameters.AddWithValue("pass", requestDto.Password);
-
-                con.Open();
-                var dr = com.ExecuteReader();
-                while (dr.Read())
-                {
-
-                    var claims = new[]
-                    {
-                    new Claim(ClaimTypes.NameIdentifier,"1"),
-                    new Claim(ClaimTypes.Name, "pawel"),
-                    new Claim(ClaimTypes.Role, "admin"),
-                    new Claim(ClaimTypes.Role, "student"),
-                    new Claim(ClaimTypes.Role, "emplyee")
-                    };
-
-                }
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken
-                (
-                     issuer: "s18793",
-                     audience: "Students",
-                    //  claims: ,
-                       expires: DateTime.Now.AddMinutes(10),
-                       signingCredentials: creds
-
-                );
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    refreshToken = Guid.NewGuid()
-                }); ;
-
-                /*
-                var pass =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Pasword"]));
-
-
-
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier,"1"),
-                    new Claim(ClaimTypes.Name, "pawel"),
-                    new Claim(ClaimTypes.Role, "student")
-                };
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken
-                (
-                     issuer: "s18793",
-                     audience: "Students",
-                      claims: claims,
-                       expires: DateTime.Now.AddMinutes(10),
-                       signingCredentials: creds
-
-                );
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    refreshToken = Guid.NewGuid()
-                }); ;
-            }*/
-
-            }
-
-        }
     }
 }
