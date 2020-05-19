@@ -37,6 +37,7 @@ namespace apbd_cw6
             {
               options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s18793;Integrated Security=True");
             });
+            services.AddScoped<IStudentDbServices, EfStudentDbService>();
             services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
